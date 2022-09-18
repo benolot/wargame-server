@@ -5,6 +5,7 @@
     Wargame Server Control Script
     Original Author: DesertEagle
     Modified By: kissinger
+    Actually Made Work By: Benolot
     
     Requirements: 
         pip3 install python-geoip-python3 python-geoip-geolite2
@@ -59,13 +60,13 @@ SERVER_LOG_PATH = "serverlog.txt"
 #================================================================================#
 # your specific lobby's parameters 
 #================================================================================#
-MIN_PLAYER_LEVEL = 5
-LOBBY_RULES = f"[EXPERIMENTAL, type 'commands' for more commands] server rules: strictly no teamkilling (even in self-defense); mark starting zones with flare or chat; minimum player level: {MIN_PLAYER_LEVEL}; no support decks (auto-enforced); offensive language may result in kick/ban"
-MIN_VOTES_TO_KICK = 3
-MAX_BADWORDS_BEFORE_KICK = 3
+MIN_PLAYER_LEVEL = 1
+LOBBY_RULES = f"[EXPERIMENTAL, type 'commands' for more commands] server rules: strictly no teamkilling (even in self-defense); mark starting zones with flare or chat; offensive language will result in warning then a kick/ban"
+MIN_VOTES_TO_KICK = 6
+MAX_BADWORDS_BEFORE_KICK = 2
 MIN_VOTES_TO_ROTATE = 3
-MIN_VOTES_TO_YEAR = 3
-MIN_VOTES_TO_CHANGE_INCOME = 3
+MIN_VOTES_TO_YEAR = 25
+MIN_VOTES_TO_CHANGE_INCOME = 25
 DISCONNECTS_IN_LAST_N_MINUTES_TO_BAN = 1
 NUM_DISCONNECTS_IN_N_MINUTES_TO_BAN = 3
 GENERAL_BLUE_DECK = "@Hs8KGG5CiPWIZrDQSmUgBUimgjmLJlTw6CeCLEkaM6Y0qHI3ypcoaIjS1JFAKCyxII5KPgkMI3IFSGEjzJ+iq0qzKSiXoA=="
@@ -84,7 +85,7 @@ MAP_POOL = [
 #    "Destruction_3x2_Montagne_3",
 #    "Destruction_3x3_Muju",
 #    "Destruction_3x3_Pyeongtaek",
-#    "Destruction_3x3_Gangjin"
+    "Destruction_2x3_Gangjin"
 ]
 
 #================================================================================#
@@ -94,7 +95,7 @@ YEAR_MAP = { '1985': 0, '1980': 1, 'any': -1 }
 INCOME_MAP = { 'none': 0, 'veryhigh': 5, 'high': 4, 'normal': 3, 'low': 2, 'verylow': 1 }
 
 # COUNTRY_FLAGS = { 'US': '#US', 'UK': '#UK', 'FR': '#FR', 'DE': '#RFA', 'CA': '#CAN', 'DK': '#DAN', 'NO': '#NOR', 'SE': '#SWE', 'AU': '#ANZ', 'NZ': '#ANZ', 'KR': '#ROK', 'JP': '#JAP', 'PL': '#POL', 'RU': '#URSS', 'CN': '#CHI', 'CZ': '#CZ' }
-COMMANDS_LIST = '(https://bit.ly/37Ndnw5) try chatting (these work in-game too): stats, balance, kick <player-name>, rotate, rules, wherefrom, year <1980, 1985, any>, income <none, verylow, low, normal, high, veryhigh>, team <teamname>'
+COMMANDS_LIST = 'try chatting: stats, balance, kick <player-name>, rotate, rules'
 SUPPORT_DECK_TYPES = [197, 85, 133]
 AIRBORNE_DECK_TYPES = [11, 203]
 UNSPEC_DECK_TYPES = [207]
@@ -179,7 +180,7 @@ class Player:
     # ------------------------------
 
     def swap_side(self) -> None:
-        """Forcibly change player's side to opposite of what it is now"""
+        # Forcibly change player's side to opposite of what it is now
         if self.get_side() == Side.Bluefor:
             side = Side.Redfor
         else:
@@ -195,10 +196,10 @@ class Player:
     def change_side(self, side: int) -> None:
         """Forcibly change player's side"""
         Rcon.execute("setpvar " + self._id + " PlayerAlliance " + str(int(side)))
-        #if side == Side.Bluefor:
-        #    self.change_deck(GENERAL_BLUE_DECK)
-        #else:
-        #    self.change_deck(GENERAL_RED_DECK)
+        if side == Side.Bluefor:
+           self.change_deck(GENERAL_BLUE_DECK)
+        else:
+           self.change_deck(GENERAL_RED_DECK)
             
     def change_deck(self, deck: str) -> None:
         """Forcibly assign new deck to a player"""
@@ -350,19 +351,15 @@ class Game:
                 known_player.ban()
 
         else: # new player, send them the rules
-            pass #Server.send_message(LOBBY_RULES, playerid)
+            Server.send_message(LOBBY_RULES, playerid)
 
         # if we now have n-1 or n-2 clients, let's autobalance
         if self.minPlayersToStart > 0 and len(self.players) >= self.minPlayersToStart - 2:
             self.balance(execute=False) # TODO
 
     def on_player_deck_set(self, playerid: str, playerdeck: str) -> None:
-        if Deck.is_support_deck(playerdeck):
-            p = self.players.get(playerid)
-            if p:
-                p.set_default_deck()
-                self.send_message(f'{p.get_name()}: support deck disallowed by server rules. Resetting deck', lobby_only=True)
-
+        return
+       
     def on_player_message(self, client_id: str, msg: str) -> None:
         # find the player id
         from_player = self.players.get(client_id)
@@ -379,6 +376,7 @@ class Game:
                     self.send_message(f'player {from_player.get_name()} kicked for language')
                     from_player.kick()
                 else:
+                    self.send_message(f'{from_player.get_name()} warning for language. Further violations will result in a kick/ban')
                     print(f'player {from_player.get_name()} used badword: {badword}')
                 break
         
@@ -401,15 +399,6 @@ class Game:
             self.handle_year_request(msg, from_player)
         elif msg.startswith('income '):
             self.handle_income_request(msg, from_player)
-        elif msg == 'wherefrom':
-            s = []
-            for player in self.players.values():
-                match = geolite2.lookup(player.get_ip())
-                if match:
-                    suffix = match.country #COUNTRY_FLAGS.get(match.country, match.country)
-                    s.append(f'{player.get_name()}: {suffix}')
-            self.send_message(', '.join(s), lobby_only=False)
-
 
     def on_player_level_set(self, playerid: str, playerlevel: int) -> None:
         self.limit_level(playerid, playerlevel)
@@ -571,6 +560,7 @@ class Game:
             new_id = math.floor(len(MAP_POOL) * random())
         Server.change_map(MAP_POOL[new_id])
         print(f"Rotating map to {MAP_POOL[new_id]}")
+        self.send_message(f'Rotating map to {MAP_POOL[new_id]}')
 
     def limit_level(self, playerid: str, playerlevel: int) -> None:
         """Kick players below certain level"""
