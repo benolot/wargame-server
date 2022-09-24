@@ -355,8 +355,8 @@ class Game:
             Server.send_message(LOBBY_RULES, int(playerid))
 
         # if we now have n-1 or n-2 clients, let's autobalance
-        if self.minPlayersToStart > 0 and len(self.players) >= self.minPlayersToStart - 2:
-            self.balance(execute=False) # TODO
+        # if self.minPlayersToStart > 0 and len(self.players) >= self.minPlayersToStart - 2:
+        #     self.balance(execute=False) # TODO
 
     def on_player_deck_set(self, playerid: str, playerdeck: str) -> None:
         return
@@ -481,7 +481,7 @@ class Game:
     def handle_team_affiliation(self, msg: str, from_player: Player) -> None:
         team_requested = msg.split(' ')[1]
         from_player.team_affiliation = team_requested
-        self.send_message(f'in autobalance, {from_player.get_name()} will stay on the same side as all players on: {team_requested}', lobby_only=True)
+        # self.send_message(f'in autobalance, {from_player.get_name()} will stay on the same side as all players on: {team_requested}', lobby_only=True)
     
     def handle_rotate_request(self, from_player: Player) -> None:
         from_player.votes['rotate'][1] = True
@@ -858,7 +858,7 @@ game.map_random_rotate()
             blues = [players[playerid].get_level() for playerid, side in suggestion if side == Side.Bluefor]
             reds = [players[playerid].get_level() for playerid, side in suggestion if side == Side.Redfor]
             if execute:
-                self.send_message("teams have been autobalanced. if you want to stay on the same side as a friend, both chat 'team XYZ'", lobby_only=True)
+                # self.send_message("teams have been autobalanced. if you want to stay on the same side as a friend, both chat 'team XYZ'", lobby_only=True)
                 self.message_average_team_info()
             else:
                 if had_suggestion:
