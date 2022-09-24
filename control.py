@@ -78,12 +78,13 @@ MAP_POOL = [
     "Destruction_2x3_Boseong",
     "Destruction_2x3_Tohoku",
     "Destruction_2x3_Anbyon",
+    "Destruction_2x3_Montagne_2",
+    "Destruction_3x2_Montagne_3",
+    "Destruction_3x3_Muju",
 #    "Destruction_3x2_Boryeong_Terrestre",
 #    "Destruction_3x2_Taean",
 #    "Destruction_3x2_Taebuko",
 #    "Destruction_3x2_Sangju",
-#    "Destruction_3x2_Montagne_3",
-#    "Destruction_3x3_Muju",
 #    "Destruction_3x3_Pyeongtaek",
     "Destruction_2x3_Gangjin"
 ]
