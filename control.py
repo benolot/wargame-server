@@ -61,7 +61,7 @@ SERVER_LOG_PATH = "serverlog.txt"
 # your specific lobby's parameters 
 #================================================================================#
 MIN_PLAYER_LEVEL = 1
-LOBBY_RULES = f"[EXPERIMENTAL, type 'commands' for more commands] server rules: strictly no teamkilling (even in self-defense); mark starting zones with flare or chat; offensive language will result in warning then a kick/ban"
+LOBBY_RULES = f"[EXPERIMENTAL, type 'commands' for more commands] server rules: no intentional teamkilling (even in self-defense); please mark starting zones with flare or chat; offensive language will result in warning then a kick/ban"
 MIN_VOTES_TO_KICK = 6
 MAX_BADWORDS_BEFORE_KICK = 2
 MIN_VOTES_TO_ROTATE = 3
@@ -352,7 +352,7 @@ class Game:
                 known_player.ban()
 
         else: # new player, send them the rules
-            Server.send_message(LOBBY_RULES, playerid)
+            Server.send_message(LOBBY_RULES, int(playerid))
 
         # if we now have n-1 or n-2 clients, let's autobalance
         if self.minPlayersToStart > 0 and len(self.players) >= self.minPlayersToStart - 2:
