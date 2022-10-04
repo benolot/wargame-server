@@ -78,15 +78,17 @@ MAP_POOL = [
     "Destruction_2x3_Boseong",
     "Destruction_2x3_Tohoku",
     "Destruction_2x3_Anbyon",
-    "Destruction_2x3_Montagne_2",
-    "Destruction_3x2_Montagne_3",
     "Destruction_3x3_Muju",
-#    "Destruction_3x2_Boryeong_Terrestre",
-#    "Destruction_3x2_Taean",
-#    "Destruction_3x2_Taebuko",
-#    "Destruction_3x2_Sangju",
-#    "Destruction_3x3_Pyeongtaek",
-    "Destruction_2x3_Gangjin"
+    "Destruction_3x3_Muju_Alt",
+    "Destruction_2x3_Gangjin",
+    "Destruction_3x3_Thuringer_Wald_Alt",
+    "Destruction_5x3_Marine_1_small_Terrestre"
+    "Destruction_2x3_Tohoku_Alt",
+    "Destruction_3x3_Marine_3_Terrestre",
+    "Destruction_3x3_Marine_3_Reduite_Terrestre",
+    "Destruction_3x2_Haenam_Alt",
+    "Destruction_3x3_Highway",
+    "Destruction_3x3_Chongju_Alt"
 ]
 
 #================================================================================#
