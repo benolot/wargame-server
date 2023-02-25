@@ -72,24 +72,20 @@ NUM_DISCONNECTS_IN_N_MINUTES_TO_BAN = 3
 GENERAL_BLUE_DECK = "@Hs8KGG5CiPWIZrDQSmUgBUimgjmLJlTw6CeCLEkaM6Y0qHI3ypcoaIjS1JFAKCyxII5KPgkMI3IFSGEjzJ+iq0qzKSiXoA=="
 GENERAL_RED_DECK = "@Us8JknYKpymQ0KaIKC4i1CeRZKDIvjGshwUAcYm9aWwckJ+IrSdog7IBCBUkvJGSRwoUIOiNgiPRSidknuJQCBMohSXg"
 MAP_POOL = [
+    "Destruction_2x3_Montagne_1",
     "Destruction_2x2_port_Wonsan_Terrestre",
+    "Destruction_3x3_Highway_Small,"
+    "Destruction_3x2_Haenam_Alt",
     "Destruction_2x3_Hwaseong",
     "Destruction_2x3_Esashi",
-    "Destruction_2x3_Boseong",
     "Destruction_2x3_Tohoku_Alt",
-    "Destruction_2x3_Anbyon",
     "Destruction_3x3_Muju",
     "Destruction_3x3_Muju_Alt",
     "Destruction_2x3_Gangjin",
     "Destruction_3x3_Thuringer_Wald_Alt",
-    "Destruction_5x3_Marine_1_small_Terrestre"
-    "Destruction_2x3_Tohoku_Alt",
     "Destruction_3x3_Marine_3_Terrestre",
     "Destruction_3x3_Marine_3_Reduite_Terrestre",
     "Destruction_3x2_Haenam_Alt",
-    "Destruction_3x3_Highway",
-    "Destruction_3x3_Highway_Alt",
-    "Destruction_3x3_Chongju_Alt",
     "Destruction_3x2_Taebuko",
     "Destruction_3x2_Boryeong_Terrestre",
 ]
